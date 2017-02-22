@@ -1,0 +1,112 @@
+<h1>Welcome, <%=@user.first_name%></h1>
+<a href="/users/edit">Edit Profile</a>
+<a href="/logout">Logout</a>
+<br>
+<b>Here are some of the events in your state</b>
+<table>
+  <tr>
+  <th>
+    Name
+  </th>
+  <th>
+    Date
+  </th>
+  <th>
+    Location
+  </th>
+  <th>
+    Host
+  </th>
+  <th>
+    Action/status
+  </th>
+  </tr>
+  <%@events_in_state.each do |event|%>
+  <tr>
+    <td>
+      <a href="/events/show/<%=event.id%>"><%=event.name%></a>
+    </td>
+    <td>
+      <%=event.date%>
+    </td>
+    <td>
+      <%=event.location%>
+    </td>
+    <td>
+      <%=event.user.first_name%>
+    </td>
+    <td>
+      <%if event.user.id == @user.id%>
+      <a href="/events/edit/<%=event.id%>">Edit</a>
+      <a href="/events/delete/<%=event.id%>">Delete</a>
+      <%elsif event.users_attending.include? @user%>
+      Joined!
+      <a href="/events/leave/<%=event.id%>">Leave</a>
+      <%else%>
+      <a href="/events/join/<%=event.id%>">Join!</a>
+      <%end%>
+    </td>
+  </tr>
+  <%end%>
+</table>
+<hr>
+<b>Here are some of the events in other states</b>
+<table>
+  <tr>
+  <th>
+    Name
+  </th>
+  <th>
+    Date
+  </th>
+  <th>
+    Location
+  </th>
+  <th>
+    Host
+  </th>
+  <th>
+    Action
+  </th>
+  </tr>
+  <%@events_out_state.each do |event|%>
+  <tr>
+    <td>
+      <a href="/events/show/<%=event.id%>"><%=event.name%></a>
+    </td>
+    <td>
+      <%=event.date%>
+    </td>
+    <td>
+      <%=event.location%>
+    </td>
+    <td>
+      <%=event.user.first_name%>
+    </td>
+    <td>
+      <%if event.user.id == @user.id%>
+      <a href="/events/edit/<%=event.id%>">Edit</a>
+      <a href="/events/delete/<%=event.id%>">Delete</a>
+      <%elsif event.users_attending.include? @user%>
+      Joined!
+      <a href="/events/leave/<%=event.id%>">Leave</a>
+      <%else%>
+      <a href="/events/join/<%=event.id%>">Join!</a>
+      <%end%>
+    </td>
+  </tr>
+  <%end%>
+</table>
+<h3>Add Event</h3>
+<form action="/events/create" method="post">
+  <input name="authenticity_token" value="<%= form_authenticity_token %>" type="hidden">
+  Name <input type="text" name="event[name]" value="">
+  Date <input type="date" name="event[date]" value="">
+  Location <input type="text" name="event[location]" value="">
+  <select name="event[state]">
+    <option value="CA">CA</option>
+    <option value="AZ">AZ</option>
+    <option value="NV">NV</option>
+  </select>
+  <input type="submit" value="Add Event">
+</form>
